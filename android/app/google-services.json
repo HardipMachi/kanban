@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "627110312345",
+    "project_id": "kanban-app-ee375",
+    "storage_bucket": "kanban-app-ee375.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:627110312345:android:7d53a574f1a484ea817b08",
+        "android_client_info": {
+          "package_name": "com.example.kanban"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJd5CX8iGedlcMLaSnuZV1pX-D3r4n66E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
