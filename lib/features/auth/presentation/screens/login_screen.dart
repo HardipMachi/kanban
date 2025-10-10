@@ -1,10 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../app/contants/app_buttonStyles.dart';
-import '../../../../app/contants/app_colors.dart';
-import '../../../../app/contants/app_textStyles.dart';
-import '../../../../app/routes/app_router.dart';
+import '../../../../app/app_constants/app_buttonStyles.dart';
+import '../../../../app/app_constants/app_colors.dart';
+import '../../../../app/app_constants/app_textStyles.dart';
+import '../../../../app/app_routes/app_router.dart';
 import '../../../../core/utils/toast_util.dart';
 import '../providers/auth_providers.dart';
 

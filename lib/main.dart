@@ -1,8 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app/contants/app_colors.dart';
-import 'app/routes/app_router.dart';
+import 'app/app_constants/app_colors.dart';
+import 'app/app_routes/app_router.dart';
 import 'firebase_options.dart';
 
 void main() async {

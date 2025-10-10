@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
-import '../../../../app/routes/app_router.dart';
+import '../../../../app/app_routes/app_router.dart';
 import '../../../../core/utils/dialogue_utils.dart';
 import '../../../../core/utils/toast_util.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
