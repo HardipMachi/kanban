@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../../routes/app_router.dart';
+import '../../../app/routes/app_router.dart';
 import '../../auth/presentation/providers/auth_providers.dart';
 import '../data/model/task_model.dart';
 
@@ -37,7 +37,6 @@ class KanbanNotifier {
       'userId': uid,
     });
   }
-
 
   Future<void> updateStatus(String taskId, String status) async {
     await _firestore.collection('tasks').doc(taskId).update({
