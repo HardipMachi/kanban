@@ -4,7 +4,6 @@ import '../../../../app/app_constants/app_buttonStyles.dart';
 import '../../../../app/app_constants/app_colors.dart';
 import '../../../../app/app_constants/app_textStyles.dart';
 import '../../../../app/app_routes/app_router.dart';
-import '../../../../core/utils/toast_util.dart';
 import '../auth_utils/register_util.dart';
 import '../providers/auth_providers.dart';
 
