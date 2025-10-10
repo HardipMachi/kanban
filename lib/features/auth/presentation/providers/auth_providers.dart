@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/auth_repository.dart';
+import '../../data/repository/auth_repository.dart';
 import '../../data/model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

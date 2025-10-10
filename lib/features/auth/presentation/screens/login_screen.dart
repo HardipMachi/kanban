@@ -1,11 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../app/routes/app_router.dart';
-import '../../../core/contants/app_buttonStyles.dart';
-import '../../../core/contants/app_colors.dart';
-import '../../../core/contants/app_textStyles.dart';
-import '../../auth/presentation/providers/auth_providers.dart';
+import '../../../../app/contants/app_buttonStyles.dart';
+import '../../../../app/contants/app_colors.dart';
+import '../../../../app/contants/app_textStyles.dart';
+import '../../../../app/routes/app_router.dart';
+import '../../../../core/utils/toast_util.dart';
+import '../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
@@ -18,59 +19,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  void showToast(BuildContext context, String message, {bool isSuccess = true}) {
-    final color = isSuccess ? AppColors.success.shade600 : AppColors.error.shade600;
-    final icon = isSuccess ? Icons.check_circle : Icons.error;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(12),
-        content: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: AppColors.white),
-              const SizedBox(width: 12),
-              Expanded(child: Text(message, style: AppTextStyles.toastText)),
-            ],
-          ),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
-
   Future<void> login() async {
     FocusScope.of(context).unfocus();
-
     try {
       await ref.read(authStateProvider.notifier).login(
         emailController.text.trim(),
         passwordController.text.trim(),
       );
-
       final user = ref.read(authStateProvider).value;
-
       if (!mounted) return; // Ensure widget still exists
-
       if (user != null) {
         showToast(context, "Login Successful", isSuccess: true);
-
         await Future.delayed(const Duration(milliseconds: 800));
-
         if (!mounted) return;
         appRouter.go('/kanban');
       }
     } on FirebaseAuthException catch (e) {
       if (!mounted) return; // In case user left screen early
-
       if (e.code == 'user-not-found') {
         showToast(context, "No user found with this email", isSuccess: false);
       } else if (e.code == 'wrong-password') {

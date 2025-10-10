@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../app/routes/app_router.dart';
-import '../../../core/contants/app_buttonStyles.dart';
-import '../../../core/contants/app_colors.dart';
-import '../../../core/contants/app_textStyles.dart';
-import '../../auth/presentation/providers/auth_providers.dart';
+import '../../../../app/contants/app_buttonStyles.dart';
+import '../../../../app/contants/app_colors.dart';
+import '../../../../app/contants/app_textStyles.dart';
+import '../../../../app/routes/app_router.dart';
+import '../../../../core/utils/toast_util.dart';
+import '../providers/auth_providers.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({super.key});
@@ -17,35 +18,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  void showToast(BuildContext context, String message, {bool isSuccess = true}) {
-    final color = isSuccess ? AppColors.success.shade600 : AppColors.error.shade600;
-    final icon = isSuccess ? Icons.check_circle : Icons.error;
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.all(12),
-        content: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: AppColors.white),
-              const SizedBox(width: 12),
-              Expanded(child: Text(message, style: AppTextStyles.toastText)),
-            ],
-          ),
-        ),
-        duration: const Duration(seconds: 2),
-      ),
-    );
-  }
 
   Future<void> register() async {
     FocusScope.of(context).unfocus(); // close keyboard
@@ -84,7 +56,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const Icon(Icons.person_add_alt_1, size: 64, color: AppColors.primary),
               const SizedBox(height: 20),
-              const Text('Create Account 👤', textAlign: TextAlign.center, style: AppTextStyles.heading),
+              const Text('Create Account', textAlign: TextAlign.center, style: AppTextStyles.heading),
               const SizedBox(height: 8),
               const Text('Register to get started with Kanban Board', textAlign: TextAlign.center, style: AppTextStyles.subHeading),
               const SizedBox(height: 30),
