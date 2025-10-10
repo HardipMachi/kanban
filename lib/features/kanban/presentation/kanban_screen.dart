@@ -38,6 +38,13 @@ class KanbanNotifier {
     });
   }
 
+  Future<void> updateTask(String taskId, String title, String description) async {
+    await _firestore.collection('tasks').doc(taskId).update({
+      'title': title,
+      'description': description,
+    });
+  }
+
   Future<void> updateStatus(String taskId, String status) async {
     await _firestore.collection('tasks').doc(taskId).update({
       'status': status,
@@ -147,6 +154,48 @@ class KanbanScreen extends ConsumerWidget {
     );
   }
 
+  void _showEditTaskDialog(BuildContext context, KanbanNotifier notifier, TaskModel task) {
+    final titleController = TextEditingController(text: task.title);
+    final descController = TextEditingController(text: task.description);
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Edit Task'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
+            TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () async {
+              final title = titleController.text.trim();
+              final desc = descController.text.trim();
+              if (title.isEmpty) return;
+
+              await notifier.updateTask(task.id, title, desc);
+
+              if (context.mounted) {
+                Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Task updated successfully!'), backgroundColor: Colors.green),
+                );
+              }
+            },
+            child: const Text('Update'),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Build each Kanban column
   Widget buildColumn(
       BuildContext context,
@@ -208,25 +257,54 @@ class KanbanScreen extends ConsumerWidget {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                         elevation: 2,
-                        child: ListTile(
-                          title: Text(
-                            task.title,
-                            style: TextStyle(
-                              decoration: task.status == 'completed' ? TextDecoration.lineThrough : null,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Text(task.description, maxLines: 2, overflow: TextOverflow.ellipsis),
-                          trailing: IconButton(
-                            icon: const Icon(Icons.delete_outline, color: Colors.red),
-                            onPressed: () async {
-                              await notifier.deleteTask(task.id);
-                              if (context.mounted) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Task deleted'), backgroundColor: Colors.red),
-                                );
-                              }
-                            },
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Title
+                              Text(
+                                task.title,
+                                style: TextStyle(
+                                  decoration: task.status == 'completed' ? TextDecoration.lineThrough : null,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              // Description
+                              Text(
+                                task.description,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.grey),
+                              ),
+                              const SizedBox(height: 8),
+                              // Buttons Row
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton.icon(
+                                    onPressed: () => _showEditTaskDialog(context, notifier, task),
+                                    icon: const Icon(Icons.edit, color: Colors.blue, size: 18),
+                                    label: const Text('Edit', style: TextStyle(color: Colors.blue)),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  TextButton.icon(
+                                    onPressed: () async {
+                                      await notifier.deleteTask(task.id);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Task deleted'), backgroundColor: Colors.red),
+                                        );
+                                      }
+                                    },
+                                    icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
+                                    label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                       ),
