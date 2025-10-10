@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
 import '../../../../app/app_routes/app_router.dart';
+import '../../../../core/providers/loading_provider.dart';
 import '../../../../core/utils/dialogue_utils.dart';
 import '../../../../core/utils/toast_util.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
@@ -15,51 +16,88 @@ class KanbanScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tasksAsync = ref.watch(kanbanTasksProvider);
     final notifier = ref.read(kanbanNotifierProvider);
+    final isLoading = ref.watch(loadingProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Kanban Board'),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await ref.read(authStateProvider.notifier).logout();
-              appRouter.go('/login');
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => showAddTaskDialog(context, notifier),
-        child: const Icon(Icons.add),
-      ),
-      body: tasksAsync.when(
-        data: (tasks) {
-          final todo = tasks.where((t) => t.status == 'todo').toList();
-          final inProgress = tasks.where((t) => t.status == 'inProgress').toList();
-          final completed = tasks.where((t) => t.status == 'completed').toList();
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text('Kanban Board'),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.logout),
+                onPressed: () async {
+                  final isLoading = ref.read(loadingProvider);
+                  if (isLoading) return; // Prevent multiple taps
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildColumn(context, notifier, 'To Do', 'todo', todo, Colors.blue.shade100),
-                  const SizedBox(width: 12),
-                  buildColumn(context, notifier, 'In Progress', 'inProgress', inProgress, Colors.orange.shade100),
-                  const SizedBox(width: 12),
-                  buildColumn(context, notifier, 'Completed', 'completed', completed, Colors.green.shade100),
-                ],
+                  ref.read(loadingProvider.notifier).state = true; // Start loading
+
+                  try {
+                    await ref.read(authStateProvider.notifier).logout();
+
+                    // Invalidate everything
+                    ref.invalidate(taskRepositoryProvider);
+                    ref.invalidate(kanbanNotifierProvider);
+                    ref.invalidate(kanbanTasksProvider);
+                    ref.invalidate(authStateProvider);
+                    ref.invalidate(authRepositoryProvider);
+
+                    if (context.mounted) {
+                      showToast(context, "Logged out successfully", isSuccess: true);
+                      await Future.delayed(const Duration(milliseconds: 300));
+                      appRouter.go('/login');
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      showToast(context, "Logout failed: ${e.toString()}", isSuccess: false);
+                    }
+                  } finally {
+                    ref.read(loadingProvider.notifier).state = false; // Stop loading
+                  }
+                },
               ),
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () => showAddTaskDialog(context, notifier),
+            child: const Icon(Icons.add),
+          ),
+          body: tasksAsync.when(
+            data: (tasks) {
+              final todo = tasks.where((t) => t.status == 'todo').toList();
+              final inProgress = tasks.where((t) => t.status == 'inProgress').toList();
+              final completed = tasks.where((t) => t.status == 'completed').toList();
+
+              return SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      buildColumn(context, notifier, 'To Do', 'todo', todo, Colors.blue.shade100),
+                      const SizedBox(width: 12),
+                      buildColumn(context, notifier, 'In Progress', 'inProgress', inProgress, Colors.orange.shade100),
+                      const SizedBox(width: 12),
+                      buildColumn(context, notifier, 'Completed', 'completed', completed, Colors.green.shade100),
+                    ],
+                  ),
+                ),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, _) => Center(child: Text('Error: $e')),
+          ),
+        ),
+        if (isLoading)
+          Container(
+            color: Colors.black45,
+            child: const Center(
+              child: CircularProgressIndicator(color: Colors.white),
             ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => Center(child: Text('Error: $e')),
-      ),
+          ),
+      ]
     );
   }
 

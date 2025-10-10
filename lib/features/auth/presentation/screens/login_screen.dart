@@ -1,11 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/app_constants/app_buttonStyles.dart';
 import '../../../../app/app_constants/app_colors.dart';
 import '../../../../app/app_constants/app_textStyles.dart';
 import '../../../../app/app_routes/app_router.dart';
-import '../../../../core/utils/toast_util.dart';
+import '../auth_utils/login_util.dart';
 import '../providers/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -18,39 +17,6 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  Future<void> login() async {
-    FocusScope.of(context).unfocus();
-    try {
-      await ref.read(authStateProvider.notifier).login(
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
-      final user = ref.read(authStateProvider).value;
-      if (!mounted) return; // Ensure widget still exists
-      if (user != null) {
-        showToast(context, "Login Successful", isSuccess: true);
-        await Future.delayed(const Duration(milliseconds: 800));
-        if (!mounted) return;
-        appRouter.go('/kanban');
-      }
-    } on FirebaseAuthException catch (e) {
-      if (!mounted) return; // In case user left screen early
-      if (e.code == 'user-not-found') {
-        showToast(context, "No user found with this email", isSuccess: false);
-      } else if (e.code == 'wrong-password') {
-        showToast(context, "Incorrect password", isSuccess: false);
-      } else if (e.code == 'invalid-email') {
-        showToast(context, "Invalid email format", isSuccess: false);
-      } else {
-        showToast(context, "Login failed: ${e.message}", isSuccess: false);
-      }
-    } catch (e) {
-      if (!mounted) return;
-      showToast(context, "Error: ${e.toString()}", isSuccess: false);
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +64,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               ElevatedButton(
                 style: AppButtonStyles.primary,
-                onPressed: authState.isLoading ? null : login,
+                onPressed: authState.isLoading ? null :  () => loginUser(
+                  context: context,
+                  ref: ref,
+                  email: emailController.text.trim(),
+                  password: passwordController.text.trim(),
+                ),
                 child: authState.isLoading
                     ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                     : const Text('Login', style: AppTextStyles.buttonText),

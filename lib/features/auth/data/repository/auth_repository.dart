@@ -17,7 +17,7 @@ class AuthRepository {
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      // ✅ rethrow exact Firebase error so UI can handle it properly
+      // rethrow exact Firebase error so UI can handle it properly
       rethrow;
     } catch (e) {
       // Catch unexpected errors
@@ -39,7 +39,7 @@ class AuthRepository {
       }
       return null;
     } on FirebaseAuthException catch (e) {
-      rethrow; // ✅ keep FirebaseAuthException for UI
+      rethrow; // keep FirebaseAuthException for UI
     } catch (e) {
       throw Exception('Unexpected error: $e');
     }

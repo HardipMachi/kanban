@@ -5,6 +5,7 @@ import '../../../../app/app_constants/app_colors.dart';
 import '../../../../app/app_constants/app_textStyles.dart';
 import '../../../../app/app_routes/app_router.dart';
 import '../../../../core/utils/toast_util.dart';
+import '../auth_utils/register_util.dart';
 import '../providers/auth_providers.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
@@ -18,33 +19,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-
-  Future<void> register() async {
-    FocusScope.of(context).unfocus(); // close keyboard
-    try {
-      await ref.read(authStateProvider.notifier).register(
-        nameController.text.trim(),
-        emailController.text.trim(),
-        passwordController.text.trim(),
-      );
-
-      final user = ref.read(authStateProvider).value;
-
-      if (!mounted) return; // Check if widget is still mounted
-
-      if (user != null) {
-        showToast(context, "Registration Successful", isSuccess: true);
-        await Future.delayed(const Duration(milliseconds: 800));
-        if (!mounted) return; // Check again before navigation
-        appRouter.go('/login');
-      } else {
-        showToast(context, "Registration failed", isSuccess: false);
-      }
-    } catch (e) {
-      if (!mounted) return; // Avoid calling showToast if widget removed
-      showToast(context, "Error: ${e.toString()}", isSuccess: false);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +82,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               ElevatedButton(
                 style: AppButtonStyles.primary,
-                onPressed: authState.isLoading ? null : register,
+                onPressed: authState.isLoading ? null : () => registerUser(
+                  context: context,
+                  ref: ref,
+                  name: nameController.text.trim(),
+                  email: emailController.text.trim(),
+                  password: passwordController.text.trim(),
+                ),
                 child: authState.isLoading
                     ? const SizedBox(height: 22, width: 22, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
                     : const Text('Register', style: AppTextStyles.buttonText),
