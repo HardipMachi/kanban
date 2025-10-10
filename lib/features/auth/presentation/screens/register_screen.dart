@@ -30,14 +30,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       final user = ref.read(authStateProvider).value;
 
+      if (!mounted) return; // Check if widget is still mounted
+
       if (user != null) {
         showToast(context, "Registration Successful", isSuccess: true);
         await Future.delayed(const Duration(milliseconds: 800));
+        if (!mounted) return; // Check again before navigation
         appRouter.go('/login');
       } else {
         showToast(context, "Registration failed", isSuccess: false);
       }
     } catch (e) {
+      if (!mounted) return; // Avoid calling showToast if widget removed
       showToast(context, "Error: ${e.toString()}", isSuccess: false);
     }
   }
