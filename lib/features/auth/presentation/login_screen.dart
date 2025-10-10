@@ -57,11 +57,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       final user = ref.read(authStateProvider).value;
       if (user != null) {
-        showToast(context, "Login Successful 🎉", isSuccess: true);
+        showToast(context, "Login Successful", isSuccess: true);
         await Future.delayed(const Duration(milliseconds: 800));
         appRouter.go('/kanban');
       }
     } on FirebaseAuthException catch (e) {
+      print("ye raha error ${e.code}");
       if (e.code == 'user-not-found') {
         showToast(context, "No user found with this email", isSuccess: false);
       } else if (e.code == 'wrong-password') {

@@ -7,29 +7,41 @@ class AuthRepository {
   Future<UserModel?> login(String email, String password) async {
     try {
       final credential = await _auth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
+
       final user = credential.user;
       if (user != null) {
         return UserModel(id: user.uid, email: user.email ?? '');
       }
       return null;
+    } on FirebaseAuthException catch (e) {
+      // ✅ rethrow exact Firebase error so UI can handle it properly
+      rethrow;
     } catch (e) {
-      throw Exception(e.toString());
+      // Catch unexpected errors
+      throw Exception('Unexpected error: $e');
     }
   }
 
   Future<UserModel?> register(String name, String email, String password) async {
     try {
       final credential = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
+        email: email,
+        password: password,
+      );
+
       final user = credential.user;
       if (user != null) {
-        // Optionally save name in Firestore
+        // You can store the name in Firestore later
         return UserModel(id: user.uid, email: user.email ?? '');
       }
       return null;
+    } on FirebaseAuthException catch (e) {
+      rethrow; // ✅ keep FirebaseAuthException for UI
     } catch (e) {
-      throw Exception(e.toString());
+      throw Exception('Unexpected error: $e');
     }
   }
 
