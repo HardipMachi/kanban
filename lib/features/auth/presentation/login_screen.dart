@@ -49,6 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<void> login() async {
     FocusScope.of(context).unfocus();
+
     try {
       await ref.read(authStateProvider.notifier).login(
         emailController.text.trim(),
@@ -56,13 +57,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       );
 
       final user = ref.read(authStateProvider).value;
+
+      if (!mounted) return; // Ensure widget still exists
+
       if (user != null) {
         showToast(context, "Login Successful", isSuccess: true);
+
         await Future.delayed(const Duration(milliseconds: 800));
+
+        if (!mounted) return;
         appRouter.go('/kanban');
       }
     } on FirebaseAuthException catch (e) {
-      print("ye raha error ${e.code}");
+      if (!mounted) return; // In case user left screen early
+
       if (e.code == 'user-not-found') {
         showToast(context, "No user found with this email", isSuccess: false);
       } else if (e.code == 'wrong-password') {
@@ -73,9 +81,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         showToast(context, "Login failed: ${e.message}", isSuccess: false);
       }
     } catch (e) {
+      if (!mounted) return;
       showToast(context, "Error: ${e.toString()}", isSuccess: false);
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
