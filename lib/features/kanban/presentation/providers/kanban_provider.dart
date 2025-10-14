@@ -29,6 +29,5 @@ final kanbanNotifierProvider = Provider<KanbanNotifier>((ref) => KanbanNotifier(
 // StreamProvider for tasks
 final kanbanTasksProvider = StreamProvider<List<TaskModel>>((ref) {
   final notifier = ref.read(kanbanNotifierProvider);
-  final getTasksUseCase = ref.read(getTasksUseCaseProvider);
-  return notifier.getTasks(getTasksUseCase);
+  return notifier.getTasks(ref.read(getTasksUseCaseProvider));
 });
