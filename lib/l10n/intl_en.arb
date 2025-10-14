@@ -1,0 +1,20 @@
+{
+  "@@locale": "en",
+  "welcome": "Welcome",
+  "loginSubHeading": "Login to continue to Kanban Board",
+  "loginSuccess": "Login Successful",
+  "emailLabel": "Email",
+  "passwordLabel": "Password",
+  "loginButton": "Login",
+  "registerPrompt": "Don't have an account? Register",
+  "appTitle": "Flutter Kanban App",
+  "createAccount": "Create Account",
+  "register": "Register",
+  "registerSuccess": "Registered Successfully",
+  "registerToStart": "Register to get started with Kanban Board",
+  "registerName": "Full Name",
+  "alreadyHaveAccount": "Already have an account? Login",
+  "kanbanTitle": "Kanban Board",
+  "logout": "Logged out successfully",
+  "taskDelete": "Task deleted successfully"
+}

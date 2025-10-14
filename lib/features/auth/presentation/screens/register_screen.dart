@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kanban/app/app_constants/app_Strings.dart';
 import 'package:kanban/app/app_constants/app_buttonStyles.dart';
 import 'package:kanban/app/app_constants/app_colors.dart';
 import 'package:kanban/app/app_constants/app_textStyles.dart';
@@ -9,6 +8,7 @@ import 'package:kanban/app/app_routes/app_router.dart';
 import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
+import 'package:kanban/generated/s.dart';
 
 class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
@@ -34,10 +34,10 @@ class RegisterScreen extends ConsumerWidget {
             children: [
               const Icon(Icons.person_add_alt_1, size: 64, color: AppColors.primary),
               const SizedBox(height: 20),
-              const Text(AppStrings.createAccount, textAlign: TextAlign.center, style: AppTextStyles.heading),
+              Text(S.of(context)!.createAccount, textAlign: TextAlign.center, style: AppTextStyles.heading),
               const SizedBox(height: 8),
-              const Text(
-                AppStrings.registerToStart,
+              Text(
+                S.of(context)!.registerToStart,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.subHeading,
               ),
@@ -48,7 +48,7 @@ class RegisterScreen extends ConsumerWidget {
                 controller: authNotifier.nameController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person_outline),
-                  labelText: AppStrings.registerName,
+                  labelText: S.of(context)!.registerName,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -64,7 +64,7 @@ class RegisterScreen extends ConsumerWidget {
                 controller: authNotifier.emailController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email_outlined),
-                  labelText: AppStrings.emailLabel,
+                  labelText: S.of(context)!.emailLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -81,7 +81,7 @@ class RegisterScreen extends ConsumerWidget {
                 controller: authNotifier.passwordController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
-                  labelText: AppStrings.passwordLabel,
+                  labelText: S.of(context)!.passwordLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -102,7 +102,7 @@ class RegisterScreen extends ConsumerWidget {
                   try {
                     await authNotifier.register();
                     final user = ref.read(authNotifierProvider).value;
-                    if (context.mounted) showToast(context, AppStrings.registerSuccess, isSuccess: true);
+                    if (context.mounted) showToast(context, S.of(context)!.registerSuccess, isSuccess: true);
                     if (user != null) appRouter.go(AppRouteNames.login);
                   } catch (e) {
                     if (context.mounted) showToast(context, e.toString(), isSuccess: false);
@@ -114,7 +114,7 @@ class RegisterScreen extends ConsumerWidget {
                   width: 22,
                   child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                 )
-                    : const Text(AppStrings.register, style: AppTextStyles.buttonText),
+                    : Text(S.of(context)!.register, style: AppTextStyles.buttonText),
               ),
 
               const SizedBox(height: 12),
@@ -124,8 +124,8 @@ class RegisterScreen extends ConsumerWidget {
                   ref.read(authFormNotifierProvider.notifier).clear();
                   appRouter.go(AppRouteNames.login);
                 },
-                child: const Text(
-                  AppStrings.alreadyHaveAccount,
+                child: Text(
+                  S.of(context)!.alreadyHaveAccount,
                   style: TextStyle(color: AppColors.primary),
                 ),
               ),

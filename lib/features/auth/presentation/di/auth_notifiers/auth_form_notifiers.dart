@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthFormNotifier extends StateNotifier<int> {
-  AuthFormNotifier() : super(0); // use int as dummy state
+  AuthFormNotifier() : super(0);
 
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();

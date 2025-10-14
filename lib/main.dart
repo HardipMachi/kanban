@@ -1,10 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'app/app_constants/app_Strings.dart';
-import 'app/app_constants/app_colors.dart';
+import 'package:kanban/app/app_constants/app_colors.dart';
 import 'app/app_routes/app_router.dart';
 import 'firebase_options.dart';
+import 'generated/s.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,12 +21,14 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: AppStrings.appTitle,
+      title: S.of(context)?.kanbanTitle,
       theme: ThemeData(
-      primarySwatch: AppColors.primary,
-      useMaterial3: true,
-    ),
-      routerConfig: appRouter, // GoRouter configuration
+        primarySwatch: AppColors.primary,
+        useMaterial3: true,
+      ),
+      routerConfig: appRouter,
+      localizationsDelegates: S.localizationsDelegates,
+      supportedLocales: S.supportedLocales,
     );
   }
 }

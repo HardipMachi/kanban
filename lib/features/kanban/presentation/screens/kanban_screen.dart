@@ -4,6 +4,7 @@ import 'package:kanban/app/app_constants/app_Strings.dart';
 import 'package:kanban/app/app_routes/app_route_names.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
+import 'package:kanban/generated/s.dart';
 import '../../../../app/app_routes/app_router.dart';
 import '../../../../core/providers/loading_provider.dart';
 import '../../../../core/utils/dialogue_utils.dart';
@@ -24,7 +25,7 @@ class KanbanScreen extends ConsumerWidget {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text(AppStrings.kanbanTitle),
+            title: Text(S.of(context)!.kanbanTitle),
             centerTitle: true,
             actions: [
               IconButton(
@@ -41,7 +42,7 @@ class KanbanScreen extends ConsumerWidget {
                     ref.invalidate(kanbanNotifierProvider);
 
                     if (context.mounted) {
-                      showToast(context, AppStrings.logout, isSuccess: true);
+                      showToast(context, S.of(context)!.logout, isSuccess: true);
                       await Future.delayed(const Duration(milliseconds: 300));
                       appRouter.go(AppRouteNames.login);
                     }
@@ -171,7 +172,7 @@ class KanbanScreen extends ConsumerWidget {
                                     onPressed: () async {
                                       await notifier.deleteTask(task);
                                       if (context.mounted) {
-                                        showToast(context, AppStrings.taskDelete, isSuccess: true);
+                                        showToast(context, S.of(context)!.taskDelete, isSuccess: true);
                                       }
                                     },
                                     icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),

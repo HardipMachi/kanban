@@ -9,6 +9,7 @@ import 'package:kanban/app/app_routes/app_router.dart';
 import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
+import 'package:kanban/generated/s.dart';
 
 class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
@@ -34,7 +35,7 @@ class LoginScreen extends ConsumerWidget {
             children: [
               const Icon(Icons.lock_outline, size: 64, color: AppColors.primary),
               const SizedBox(height: 20),
-              const Text(AppStrings.welcome, textAlign: TextAlign.center, style: AppTextStyles.heading),
+              Text(S.of(context)!.welcome, textAlign: TextAlign.center, style: AppTextStyles.heading),
               const SizedBox(height: 8),
               const Text(
                 AppStrings.loginSubHeading,
@@ -48,7 +49,7 @@ class LoginScreen extends ConsumerWidget {
                 controller: authNotifier.emailController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email_outlined),
-                  labelText: AppStrings.emailLabel,
+                  labelText: S.of(context)!.emailLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -65,7 +66,7 @@ class LoginScreen extends ConsumerWidget {
                 controller: authNotifier.passwordController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
-                  labelText: AppStrings.passwordLabel,
+                  labelText: S.of(context)!.passwordLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -86,7 +87,7 @@ class LoginScreen extends ConsumerWidget {
                   try {
                     await authNotifier.login();
                     final user = ref.read(authNotifierProvider).value;
-                    if (context.mounted) showToast(context, AppStrings.loginSuccess, isSuccess: true);
+                    if (context.mounted) showToast(context, S.of(context)!.loginSuccess, isSuccess: true);
                     if (user != null) {
                       appRouter.go(AppRouteNames.kanban);
                     }
@@ -100,7 +101,7 @@ class LoginScreen extends ConsumerWidget {
                   width: 22,
                   child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
                 )
-                    : const Text(AppStrings.loginButton, style: AppTextStyles.buttonText),
+                    : Text(S.of(context)!.loginButton, style: AppTextStyles.buttonText),
               ),
 
               const SizedBox(height: 12),
@@ -110,8 +111,8 @@ class LoginScreen extends ConsumerWidget {
                   ref.read(authFormNotifierProvider.notifier).clear();
                   appRouter.go(AppRouteNames.register);
                 },
-                child: const Text(
-                  AppStrings.registerPrompt,
+                child: Text(
+                  S.of(context)!.registerPrompt,
                   style: TextStyle(color: AppColors.primary),
                 ),
               ),
