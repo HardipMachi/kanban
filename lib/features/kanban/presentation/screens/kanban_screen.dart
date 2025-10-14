@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kanban/app/app_constants/app_Strings.dart';
+import 'package:kanban/app/app_routes/app_route_names.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
 import '../../../../app/app_routes/app_router.dart';
@@ -22,7 +24,7 @@ class KanbanScreen extends ConsumerWidget {
       children: [
         Scaffold(
           appBar: AppBar(
-            title: const Text('Kanban Board'),
+            title: const Text(AppStrings.kanbanTitle),
             centerTitle: true,
             actions: [
               IconButton(
@@ -39,9 +41,9 @@ class KanbanScreen extends ConsumerWidget {
                     ref.invalidate(kanbanNotifierProvider);
 
                     if (context.mounted) {
-                      showToast(context, "Logged out successfully", isSuccess: true);
+                      showToast(context, AppStrings.logout, isSuccess: true);
                       await Future.delayed(const Duration(milliseconds: 300));
-                      appRouter.go('/login');
+                      appRouter.go(AppRouteNames.login);
                     }
                   } catch (e) {
                     if (context.mounted) {
@@ -169,7 +171,7 @@ class KanbanScreen extends ConsumerWidget {
                                     onPressed: () async {
                                       await notifier.deleteTask(task);
                                       if (context.mounted) {
-                                        showToast(context, "Task deleted successfully", isSuccess: true);
+                                        showToast(context, AppStrings.taskDelete, isSuccess: true);
                                       }
                                     },
                                     icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),

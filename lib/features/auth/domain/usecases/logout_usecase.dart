@@ -1,4 +1,4 @@
-import '../repositories/auth_repository.dart';
+import 'package:kanban/features/auth/domain/repositories/auth_repository.dart';
 
 class LogoutUseCase {
   final AuthRepository repository;

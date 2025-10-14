@@ -1,4 +1,4 @@
-import '../../domain/entities/user_entity.dart';
+import 'package:kanban/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
   const UserModel({

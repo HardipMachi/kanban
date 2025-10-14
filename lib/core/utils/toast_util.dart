@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../app/app_constants/app_colors.dart';
-import '../../app/app_constants/app_textStyles.dart';
+import 'package:kanban/app/app_constants/app_colors.dart';
+import 'package:kanban/app/app_constants/app_textStyles.dart';
 
 void showToast(BuildContext context, String message, {bool isSuccess = true}) {
   final color = isSuccess ? AppColors.success.shade600 : AppColors.error.shade600;

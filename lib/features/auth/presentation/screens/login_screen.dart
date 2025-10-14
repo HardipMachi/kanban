@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../app/app_constants/app_buttonStyles.dart';
-import '../../../../app/app_constants/app_colors.dart';
-import '../../../../app/app_constants/app_textStyles.dart';
-import '../../../../app/app_constants/app_strings.dart';
-import '../../../../app/app_routes/app_router.dart';
-import '../di/auth_providers/auth-providers.dart';
+import 'package:kanban/app/app_constants/app_Strings.dart';
+import 'package:kanban/app/app_constants/app_buttonStyles.dart';
+import 'package:kanban/app/app_constants/app_colors.dart';
+import 'package:kanban/app/app_constants/app_textStyles.dart';
+import 'package:kanban/app/app_routes/app_route_names.dart';
+import 'package:kanban/app/app_routes/app_router.dart';
+import 'package:kanban/core/utils/toast_util.dart';
+import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
+import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
 
-class LoginScreen extends ConsumerStatefulWidget {
+class LoginScreen extends ConsumerWidget {
   const LoginScreen({super.key});
 
   @override
-  ConsumerState<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final authNotifier = ref.read(authNotifierProvider.notifier);
+    final authState = ref.watch(authNotifierProvider);
 
     final isLoading = authState.when(
       data: (_) => false,
@@ -48,9 +43,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 30),
 
-              // Email field
+              // Email TextField
               TextField(
-                controller: emailController,
+                controller: authNotifier.emailController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email_outlined),
                   labelText: AppStrings.emailLabel,
@@ -65,9 +60,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Password field
+              // Password TextField
               TextField(
-                controller: passwordController,
+                controller: authNotifier.passwordController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
                   labelText: AppStrings.passwordLabel,
@@ -82,42 +77,39 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Login button
+              // Login Button
               ElevatedButton(
                 style: AppButtonStyles.primary,
                 onPressed: isLoading
                     ? null
                     : () async {
                   try {
-                    await authNotifier.login(
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                    );
+                    await authNotifier.login();
                     final user = ref.read(authNotifierProvider).value;
+                    if (context.mounted) showToast(context, AppStrings.loginSuccess, isSuccess: true);
                     if (user != null) {
-                      appRouter.go('/kanban');
+                      appRouter.go(AppRouteNames.kanban);
                     }
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
+                    if (context.mounted) showToast(context, e.toString(), isSuccess: false);
                   }
                 },
                 child: isLoading
                     ? const SizedBox(
                   height: 22,
                   width: 22,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ) : const Text(AppStrings.loginButton, style: AppTextStyles.buttonText),
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                )
+                    : const Text(AppStrings.loginButton, style: AppTextStyles.buttonText),
               ),
+
               const SizedBox(height: 12),
 
-              // Register button
               TextButton(
-                onPressed: () => appRouter.go('/register'),
+                onPressed: () {
+                  ref.read(authFormNotifierProvider.notifier).clear();
+                  appRouter.go(AppRouteNames.register);
+                },
                 child: const Text(
                   AppStrings.registerPrompt,
                   style: TextStyle(color: AppColors.primary),

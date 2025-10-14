@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
-import '../../features/kanban/presentation/notifiers/kanban_notifiers.dart';
+import 'package:kanban/features/kanban/presentation/notifiers/kanban_notifiers.dart';
 import 'toast_util.dart';
 
 Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) async {

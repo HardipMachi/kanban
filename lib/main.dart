@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'app/app_constants/app_Strings.dart';
 import 'app/app_constants/app_colors.dart';
 import 'app/app_routes/app_router.dart';
 import 'firebase_options.dart';
@@ -20,10 +21,10 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Kanban App',
+      title: AppStrings.appTitle,
       theme: ThemeData(
       primarySwatch: AppColors.primary,
-      useMaterial3: true, // Enables Material 3 design
+      useMaterial3: true,
     ),
       routerConfig: appRouter, // GoRouter configuration
     );

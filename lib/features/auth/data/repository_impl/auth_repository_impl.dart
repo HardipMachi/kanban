@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import '../../domain/entities/user_entity.dart';
-import '../../domain/repositories/auth_repository.dart';
-import '../model/user_model.dart';
-
+import 'package:kanban/features/auth/data/model/user_model.dart';
+import 'package:kanban/features/auth/domain/entities/user_entity.dart';
+import 'package:kanban/features/auth/domain/repositories/auth_repository.dart';
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth _auth;
 

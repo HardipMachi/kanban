@@ -1,27 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kanban/app/app_constants/app_Strings.dart';
+import 'package:kanban/app/app_constants/app_buttonStyles.dart';
+import 'package:kanban/app/app_constants/app_colors.dart';
+import 'package:kanban/app/app_constants/app_textStyles.dart';
+import 'package:kanban/app/app_routes/app_route_names.dart';
+import 'package:kanban/app/app_routes/app_router.dart';
+import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
-import '../../../../app/app_constants/app_buttonStyles.dart';
-import '../../../../app/app_constants/app_colors.dart';
-import '../../../../app/app_constants/app_textStyles.dart';
-import '../../../../app/app_routes/app_router.dart';
+import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
 
-class RegisterScreen extends ConsumerStatefulWidget {
+class RegisterScreen extends ConsumerWidget {
   const RegisterScreen({super.key});
 
   @override
-  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
-}
-
-class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
-  @override
-  Widget build(BuildContext context) {
-    final authState = ref.watch(authNotifierProvider);
+  Widget build(BuildContext context, WidgetRef ref) {
     final authNotifier = ref.read(authNotifierProvider.notifier);
+    final authState = ref.watch(authNotifierProvider);
 
     final isLoading = authState.when(
       data: (_) => false,
@@ -39,10 +34,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             children: [
               const Icon(Icons.person_add_alt_1, size: 64, color: AppColors.primary),
               const SizedBox(height: 20),
-              const Text('Create Account', textAlign: TextAlign.center, style: AppTextStyles.heading),
+              const Text(AppStrings.createAccount, textAlign: TextAlign.center, style: AppTextStyles.heading),
               const SizedBox(height: 8),
               const Text(
-                'Register to get started with Kanban Board',
+                AppStrings.registerToStart,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.subHeading,
               ),
@@ -50,10 +45,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               // Name TextField
               TextField(
-                controller: nameController,
+                controller: authNotifier.nameController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.person_outline),
-                  labelText: 'Full Name',
+                  labelText: AppStrings.registerName,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -66,10 +61,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               // Email TextField
               TextField(
-                controller: emailController,
+                controller: authNotifier.emailController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.email_outlined),
-                  labelText: 'Email',
+                  labelText: AppStrings.emailLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -83,10 +78,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
               // Password TextField
               TextField(
-                controller: passwordController,
+                controller: authNotifier.passwordController,
                 decoration: InputDecoration(
                   prefixIcon: const Icon(Icons.lock_outline),
-                  labelText: 'Password',
+                  labelText: AppStrings.passwordLabel,
                   filled: true,
                   fillColor: AppColors.white,
                   border: OutlineInputBorder(
@@ -98,46 +93,39 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Register button
+              // Register Button
               ElevatedButton(
                 style: AppButtonStyles.primary,
                 onPressed: isLoading
                     ? null
                     : () async {
                   try {
-                    await authNotifier.register(
-                      nameController.text.trim(),
-                      emailController.text.trim(),
-                      passwordController.text.trim(),
-                    );
-
+                    await authNotifier.register();
                     final user = ref.read(authNotifierProvider).value;
-                    if (user != null) {
-                      appRouter.go('/login');
-                    }
+                    if (context.mounted) showToast(context, AppStrings.registerSuccess, isSuccess: true);
+                    if (user != null) appRouter.go(AppRouteNames.login);
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text(e.toString())),
-                    );
+                    if (context.mounted) showToast(context, e.toString(), isSuccess: false);
                   }
                 },
                 child: isLoading
                     ? const SizedBox(
                   height: 22,
                   width: 22,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                ) : const Text('Register', style: AppTextStyles.buttonText),
+                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                )
+                    : const Text(AppStrings.register, style: AppTextStyles.buttonText),
               ),
 
               const SizedBox(height: 12),
 
               TextButton(
-                onPressed: () => appRouter.go('/login'),
+                onPressed: () {
+                  ref.read(authFormNotifierProvider.notifier).clear();
+                  appRouter.go(AppRouteNames.login);
+                },
                 child: const Text(
-                  "Already have an account? Login",
+                  AppStrings.alreadyHaveAccount,
                   style: TextStyle(color: AppColors.primary),
                 ),
               ),

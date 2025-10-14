@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:kanban/features/auth/domain/entities/user_entity.dart';
@@ -10,17 +11,51 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
   final RegisterUseCase registerUseCase;
   final LogoutUseCase logoutUseCase;
 
+  // TextControllers for login/register forms
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
   AuthNotifier({
     required this.loginUseCase,
     required this.registerUseCase,
     required this.logoutUseCase,
   }) : super(const AsyncValue.data(null));
 
-  // LOGIN
-  Future<void> login(String email, String password) async {
+  // ------------------- Form Validation -------------------
+  bool validate({bool isRegister = false}) {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final password = passwordController.text.trim();
+
+    if (isRegister && name.isEmpty) return false;
+    if (email.isEmpty || password.isEmpty) return false;
+    return true;
+  }
+
+  void clearForm() {
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  // ------------------- LOGIN -------------------
+  Future<void> login() async {
+    if (!validate()) throw Exception('Please fill all fields');
     try {
       state = const AsyncValue.loading();
-      final user = await loginUseCase.call(email, password);
+      final user = await loginUseCase.call(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
       state = AsyncValue.data(user);
     } on FirebaseAuthException {
       state = const AsyncValue.data(null);
@@ -31,11 +66,16 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
     }
   }
 
-  // REGISTER
-  Future<void> register(String name, String email, String password) async {
+  // ------------------- REGISTER -------------------
+  Future<void> register() async {
+    if (!validate(isRegister: true)) throw Exception('Please fill all fields');
     try {
       state = const AsyncValue.loading();
-      final user = await registerUseCase(name, email, password);
+      final user = await registerUseCase.call(
+        nameController.text.trim(),
+        emailController.text.trim(),
+        passwordController.text.trim(),
+      );
       state = AsyncValue.data(user);
     } on FirebaseAuthException {
       state = const AsyncValue.data(null);
@@ -46,9 +86,13 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
     }
   }
 
-  // LOGOUT
+  // ------------------- LOGOUT -------------------
+
   Future<void> logout() async {
     await logoutUseCase();
     state = const AsyncValue.data(null);
+    nameController.clear();
+    emailController.clear();
+    passwordController.clear();
   }
 }

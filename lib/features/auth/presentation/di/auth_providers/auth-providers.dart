@@ -4,7 +4,7 @@ import 'package:kanban/features/auth/domain/entities/user_entity.dart';
 import 'package:kanban/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kanban/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kanban/features/auth/domain/usecases/register_usecase.dart';
-import '../auth_notifiers/auth_notifiers.dart';
+import 'package:kanban/features/auth/presentation/di/auth_notifiers/auth_notifiers.dart';
 
 // ---------------- UseCases ----------------
 final loginUseCaseProvider = Provider<LoginUseCase>(

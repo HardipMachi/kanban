@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../model/task_model.dart';
-
+import 'package:kanban/features/kanban/data/model/task_model.dart';
 class TaskRepository {
   final _firestore = FirebaseFirestore.instance;
 

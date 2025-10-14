@@ -1,21 +1,22 @@
 import 'package:go_router/go_router.dart';
-import '../../features/auth/presentation/screens/login_screen.dart';
-import '../../features/auth/presentation/screens/register_screen.dart';
-import '../../features/kanban/presentation/screens/kanban_screen.dart';
+import 'package:kanban/features/auth/presentation/screens/login_screen.dart';
+import 'package:kanban/features/auth/presentation/screens/register_screen.dart';
+import 'package:kanban/features/kanban/presentation/screens/kanban_screen.dart';
+import 'package:kanban/app/app_routes/app_route_names.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/login',
+  initialLocation: AppRouteNames.login,
   routes: [
     GoRoute(
-      path: '/login',
+      path: AppRouteNames.login,
       builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
-      path: '/register',
+      path: AppRouteNames.register,
       builder: (context, state) => const RegisterScreen(),
     ),
     GoRoute(
-      path: '/kanban',
+      path: AppRouteNames.kanban,
       builder: (context, state) => const KanbanScreen(),
     ),
   ],
