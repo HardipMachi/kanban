@@ -1,12 +1,12 @@
-import '../../data/model/task_model.dart';
-import '../../data/task_repository/task_repository.dart';
+import '../entities/task_entity.dart';
+import '../repositories/task_repository.dart';
 
 class GetTasksUseCase {
   final TaskRepository repository;
 
   GetTasksUseCase(this.repository);
 
-  Stream<List<TaskModel>> call() {
+  Stream<List<TaskEntity>> call() {
     return repository.getTasks();
   }
 }

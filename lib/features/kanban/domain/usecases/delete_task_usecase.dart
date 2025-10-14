@@ -1,11 +1,12 @@
-import '../../data/task_repository/task_repository.dart';
+import '../entities/task_entity.dart';
+import '../repositories/task_repository.dart';
 
 class DeleteTaskUseCase {
   final TaskRepository repository;
 
   DeleteTaskUseCase(this.repository);
 
-  Future<void> call(String taskId) {
-    return repository.deleteTask(taskId);
+  Future<void> call(TaskEntity task) {
+    return repository.deleteTask(task);
   }
 }

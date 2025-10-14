@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
 import '../../../../app/app_routes/app_router.dart';
 import '../../../../core/providers/loading_provider.dart';
 import '../../../../core/utils/dialogue_utils.dart';
 import '../../../../core/utils/toast_util.dart';
-import '../../../auth/presentation/providers/auth_providers.dart';
-import '../../data/model/task_model.dart';
+import '../../domain/entities/task_entity.dart';
 import '../notifiers/kanban_notifiers.dart';
 
 class KanbanScreen extends ConsumerWidget {
@@ -29,19 +29,14 @@ class KanbanScreen extends ConsumerWidget {
                 icon: const Icon(Icons.logout),
                 onPressed: () async {
                   final isLoading = ref.read(loadingProvider);
-                  if (isLoading) return; // Prevent multiple taps
+                  if (isLoading) return;
 
-                  ref.read(loadingProvider.notifier).state = true; // Start loading
+                  ref.read(loadingProvider.notifier).state = true;
 
                   try {
-                    await ref.read(authStateProvider.notifier).logout();
-
-                    // Invalidate everything
-                    ref.invalidate(taskRepositoryProvider);
-                    ref.invalidate(kanbanNotifierProvider);
+                    await ref.read(authNotifierProvider.notifier).logout();
                     ref.invalidate(kanbanTasksProvider);
-                    ref.invalidate(authStateProvider);
-                    ref.invalidate(authRepositoryProvider);
+                    ref.invalidate(kanbanNotifierProvider);
 
                     if (context.mounted) {
                       showToast(context, "Logged out successfully", isSuccess: true);
@@ -53,7 +48,7 @@ class KanbanScreen extends ConsumerWidget {
                       showToast(context, "Logout failed: ${e.toString()}", isSuccess: false);
                     }
                   } finally {
-                    ref.read(loadingProvider.notifier).state = false; // Stop loading
+                    ref.read(loadingProvider.notifier).state = false;
                   }
                 },
               ),
@@ -97,11 +92,11 @@ class KanbanScreen extends ConsumerWidget {
               child: CircularProgressIndicator(color: Colors.white),
             ),
           ),
-      ]
+      ],
     );
   }
 
-  Widget buildColumn(BuildContext context, KanbanNotifier notifier, String title, String status, List<TaskModel> tasks, Color headerColor) {
+  Widget buildColumn(BuildContext context, KanbanNotifier notifier, String title, String status, List<TaskEntity> tasks, Color headerColor) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.7,
       decoration: BoxDecoration(
@@ -109,7 +104,7 @@ class KanbanScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: Colors.grey.withOpacity(0.3), blurRadius: 6, offset: const Offset(2, 3))],
       ),
-      child: DragTarget<TaskModel>(
+      child: DragTarget<TaskEntity>(
         onAccept: (task) => notifier.updateStatus(task, status),
         builder: (context, candidateData, rejectedData) {
           return Column(
@@ -133,7 +128,7 @@ class KanbanScreen extends ConsumerWidget {
                   itemCount: tasks.length,
                   itemBuilder: (context, index) {
                     final task = tasks[index];
-                    return LongPressDraggable<TaskModel>(
+                    return LongPressDraggable<TaskEntity>(
                       data: task,
                       feedback: Material(
                         color: Colors.transparent,
@@ -152,9 +147,14 @@ class KanbanScreen extends ConsumerWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(task.title, style: TextStyle(decoration: task.status == 'completed' ? TextDecoration.lineThrough : null, fontWeight: FontWeight.w600, fontSize: 16)),
+                              Text(task.title,
+                                  style: TextStyle(
+                                      decoration: task.status == 'completed' ? TextDecoration.lineThrough : null,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 16)),
                               const SizedBox(height: 4),
-                              Text(task.description, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.grey)),
+                              Text(task.description,
+                                  maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.grey)),
                               const SizedBox(height: 8),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -184,7 +184,7 @@ class KanbanScreen extends ConsumerWidget {
                     );
                   },
                 ),
-              )
+              ),
             ],
           );
         },

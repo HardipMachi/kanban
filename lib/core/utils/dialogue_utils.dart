@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../features/kanban/data/model/task_model.dart';
+import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
 import '../../features/kanban/presentation/notifiers/kanban_notifiers.dart';
 import 'toast_util.dart';
 
@@ -26,7 +26,15 @@ Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) as
             final desc = descController.text.trim();
             if (title.isEmpty) return;
 
-            await notifier.addTask(title, desc);
+            final newTask = TaskEntity(
+              id: '',
+              title: title,
+              description: desc,
+              status: 'todo',
+              userId: '',
+            );
+
+            await notifier.addTask(newTask);
             if (context.mounted) showToast(context, "Task added successfully", isSuccess: true);
             if (context.mounted) Navigator.of(context).pop();
           },
@@ -37,7 +45,7 @@ Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) as
   );
 }
 
-Future<void> showEditTaskDialog(BuildContext context, KanbanNotifier notifier, TaskModel task) async {
+Future<void> showEditTaskDialog(BuildContext context, KanbanNotifier notifier, TaskEntity task) async {
   final titleController = TextEditingController(text: task.title);
   final descController = TextEditingController(text: task.description);
 

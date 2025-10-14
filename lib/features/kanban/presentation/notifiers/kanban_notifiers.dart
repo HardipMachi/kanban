@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/task_entity.dart';
 import '../../domain/usecases/add_task_usecase.dart';
 import '../../domain/usecases/update_task_usecase.dart';
 import '../../domain/usecases/update_status_usecase.dart';
 import '../../domain/usecases/delete_task_usecase.dart';
 import '../../domain/usecases/get_tasks_usecase.dart';
-import '../../data/model/task_model.dart';
 
 class KanbanNotifier extends StateNotifier<void> {
   final AddTaskUseCase addTaskUseCase;
@@ -19,23 +19,29 @@ class KanbanNotifier extends StateNotifier<void> {
     required this.deleteTaskUseCase,
   }) : super(null);
 
-  Future<void> addTask(String title, String description) async {
-    await addTaskUseCase(title, description);
+  // ------------------ ADD TASK ------------------
+  Future<void> addTask(TaskEntity task) async {
+    await addTaskUseCase(task);
   }
 
-  Future<void> updateTask(TaskModel task, String newTitle, String newDesc) async {
-    await updateTaskUseCase(task.id, newTitle, newDesc);
+  // ------------------ UPDATE TASK ------------------
+  Future<void> updateTask(TaskEntity task, String newTitle, String newDesc) async {
+    final updatedTask = task.copyWith(title: newTitle, description: newDesc);
+    await updateTaskUseCase(updatedTask);
   }
 
-  Future<void> updateStatus(TaskModel task, String status) async {
-    await updateStatusUseCase(task.id, status);
+  // ------------------ UPDATE STATUS ------------------
+  Future<void> updateStatus(TaskEntity task, String status) async {
+    await updateStatusUseCase(task, status);
   }
 
-  Future<void> deleteTask(TaskModel task) async {
-    await deleteTaskUseCase(task.id);
+  // ------------------ DELETE TASK ------------------
+  Future<void> deleteTask(TaskEntity task) async {
+    await deleteTaskUseCase(task);
   }
 
-  Stream<List<TaskModel>> getTasks(GetTasksUseCase getTasksUseCase) {
-    return getTasksUseCase();
+  // ------------------ GET TASKS ------------------
+  Stream<List<TaskEntity>> getTasks(GetTasksUseCase useCase) {
+    return useCase();
   }
 }

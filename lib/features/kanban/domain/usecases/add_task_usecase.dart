@@ -1,11 +1,12 @@
-import '../../data/task_repository/task_repository.dart';
+import '../entities/task_entity.dart';
+import '../repositories/task_repository.dart';
 
 class AddTaskUseCase {
   final TaskRepository repository;
 
   AddTaskUseCase(this.repository);
 
-  Future<void> call(String title, String description, {String status = 'todo'}) {
-    return repository.addTask(title, description, status: status);
+  Future<void> call(TaskEntity task) {
+    return repository.addTask(task);
   }
 }
