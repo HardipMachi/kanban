@@ -8,6 +8,7 @@ import 'package:kanban/core/utils/dialogue_utils.dart';
 import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
+import 'package:kanban/features/kanban/presentation/components/taskcard.dart';
 import 'package:kanban/features/kanban/presentation/di/notifiers/kanban_notifiers.dart';
 import 'package:kanban/features/kanban/presentation/di/providers/kanban_provider.dart';
 import 'package:kanban/generated/s.dart';
@@ -133,56 +134,25 @@ class KanbanScreen extends ConsumerWidget {
                     final task = tasks[index];
                     return LongPressDraggable<TaskEntity>(
                       data: task,
-                      feedback: Material(
-                        color: Colors.transparent,
-                        child: Card(
-                          elevation: 4,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          child: Padding(padding: const EdgeInsets.all(8.0), child: Text(task.title)),
-                        ),
-                      ),
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 2,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(task.title,
-                                  style: TextStyle(
-                                      decoration: task.status == AppStrings.completed ? TextDecoration.lineThrough : null,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 16)),
-                              const SizedBox(height: 4),
-                              Text(task.description,
-                                  maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.grey)),
-                              const SizedBox(height: 8),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  TextButton.icon(
-                                    onPressed: () => showEditTaskDialog(context, notifier, task),
-                                    icon: const Icon(Icons.edit, color: Colors.blue, size: 18),
-                                    label: const Text(AppStrings.update, style: TextStyle(color: Colors.blue)),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  TextButton.icon(
-                                    onPressed: () async {
-                                      await notifier.deleteTask(task);
-                                      if (context.mounted) {
-                                        showToast(context, S.of(context)!.taskDelete, isSuccess: true);
-                                      }
-                                    },
-                                    icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
-                                    label: const Text(AppStrings.delete, style: TextStyle(color: Colors.red)),
-                                  ),
-                                ],
-                              )
-                            ],
+                      feedback: Opacity(
+                        opacity: 0.9,
+                        child: Material(
+                          color: Colors.transparent,
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.7,
+                            child: TaskCard(task: task),
                           ),
                         ),
+                      ),
+                      child: TaskCard(
+                        task: task,
+                        onEdit: () => showEditTaskDialog(context, notifier, task),
+                        onDelete: () async {
+                          await notifier.deleteTask(task);
+                          if (context.mounted) {
+                            showToast(context, S.of(context)!.taskDelete, isSuccess: true);
+                          }
+                        },
                       ),
                     );
                   },

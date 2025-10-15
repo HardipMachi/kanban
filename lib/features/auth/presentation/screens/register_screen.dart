@@ -5,9 +5,9 @@ import 'package:kanban/app/app_constants/app_colors.dart';
 import 'package:kanban/app/app_constants/app_textStyles.dart';
 import 'package:kanban/app/app_routes/app_route_names.dart';
 import 'package:kanban/app/app_routes/app_router.dart';
-import 'package:kanban/core/utils/toast_util.dart';
+import 'package:kanban/features/auth/presentation/components/custom_text_field.dart';
+import 'package:kanban/features/auth/presentation/di/auth_notifiers/auth_notifiers.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
-import 'package:kanban/features/auth/presentation/shared_widgets/custom_text_field.dart';
 import 'package:kanban/generated/s.dart';
 import '../di/auth_providers/auth_controller_providers.dart';
 
@@ -82,36 +82,12 @@ class RegisterScreen extends ConsumerWidget {
                 onPressed: isLoading
                     ? null
                     : () async {
-                  if (nameController.text.isEmpty ||
-                      emailController.text.isEmpty ||
-                      passwordController.text.isEmpty) {
-                    showToast(context, S.of(context)!.fillDetail,
-                        isSuccess: false);
-                    return;
-                  }
-
-                  try {
-                    await authNotifier.register(
-                      name: nameController.text,
-                      email: emailController.text,
-                      password: passwordController.text,
-                    );
-
-                    final user = ref.read(authNotifierProvider).value;
-
-                    if (context.mounted) {
-                      showToast(context, S.of(context)!.registerSuccess,
-                          isSuccess: true);
-                    }
-
-                    if (user != null) {
-                      appRouter.go(AppRouteNames.login);
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      showToast(context, e.toString(), isSuccess: false);
-                    }
-                  }
+                  await authNotifier.registerFromUI(
+                    name: nameController.text,
+                    email: emailController.text,
+                    password: passwordController.text,
+                    context: context,
+                  );
                 },
                 child: isLoading
                     ? const SizedBox(
