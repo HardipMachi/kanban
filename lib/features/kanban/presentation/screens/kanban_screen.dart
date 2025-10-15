@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kanban/app/app_constants/app_Strings.dart';
 import 'package:kanban/app/app_routes/app_route_names.dart';
+import 'package:kanban/app/app_routes/app_router.dart';
+import 'package:kanban/core/providers/loading_provider.dart';
+import 'package:kanban/core/utils/dialogue_utils.dart';
+import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
-import 'package:kanban/features/kanban/presentation/providers/kanban_provider.dart';
+import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
+import 'package:kanban/features/kanban/presentation/di/notifiers/kanban_notifiers.dart';
+import 'package:kanban/features/kanban/presentation/di/providers/kanban_provider.dart';
 import 'package:kanban/generated/s.dart';
-import '../../../../app/app_routes/app_router.dart';
-import '../../../../core/providers/loading_provider.dart';
-import '../../../../core/utils/dialogue_utils.dart';
-import '../../../../core/utils/toast_util.dart';
-import '../../domain/entities/task_entity.dart';
-import '../notifiers/kanban_notifiers.dart';
 
 class KanbanScreen extends ConsumerWidget {
   const KanbanScreen({super.key});

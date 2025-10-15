@@ -5,13 +5,19 @@ import '../../domain/repositories/task_repository.dart';
 import '../model/task_model.dart';
 
 class TaskRepositoryImpl implements TaskRepository {
-  final _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore firestore;
+  final FirebaseAuth auth;
+
+  TaskRepositoryImpl({
+    required this.firestore,
+    required this.auth,
+  });
 
   // ------------------ GET TASKS ------------------
   @override
   Stream<List<TaskEntity>> getTasks() {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    return _firestore
+    final uid = auth.currentUser?.uid ?? '';
+    return firestore
         .collection('tasks')
         .where('userId', isEqualTo: uid) // current user
         .orderBy('createdAt')
@@ -31,8 +37,8 @@ class TaskRepositoryImpl implements TaskRepository {
   // ------------------ ADD TASK ------------------
   @override
   Future<void> addTask(TaskEntity task) async {
-    final uid = FirebaseAuth.instance.currentUser?.uid ?? '';
-    await _firestore.collection('tasks').add({
+    final uid = auth.currentUser?.uid ?? '';
+    await firestore.collection('tasks').add({
       'title': task.title,
       'description': task.description,
       'status': task.status,
@@ -44,7 +50,7 @@ class TaskRepositoryImpl implements TaskRepository {
   // ------------------ UPDATE TASK ------------------
   @override
   Future<void> updateTask(TaskEntity task) async {
-    await _firestore.collection('tasks').doc(task.id).update({
+    await firestore.collection('tasks').doc(task.id).update({
       'title': task.title,
       'description': task.description,
     });
@@ -53,7 +59,7 @@ class TaskRepositoryImpl implements TaskRepository {
   // ------------------ UPDATE STATUS ------------------
   @override
   Future<void> updateStatus(TaskEntity task, String status) async {
-    await _firestore.collection('tasks').doc(task.id).update({
+    await firestore.collection('tasks').doc(task.id).update({
       'status': status,
     });
   }
@@ -61,6 +67,6 @@ class TaskRepositoryImpl implements TaskRepository {
   // ------------------ DELETE TASK ------------------
   @override
   Future<void> deleteTask(TaskEntity task) async {
-    await _firestore.collection('tasks').doc(task.id).delete();
+    await firestore.collection('tasks').doc(task.id).delete();
   }
 }

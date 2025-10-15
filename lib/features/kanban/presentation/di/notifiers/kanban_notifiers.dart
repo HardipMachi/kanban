@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/entities/task_entity.dart';
-import '../../domain/usecases/add_task_usecase.dart';
-import '../../domain/usecases/update_task_usecase.dart';
-import '../../domain/usecases/update_status_usecase.dart';
-import '../../domain/usecases/delete_task_usecase.dart';
-import '../../domain/usecases/get_tasks_usecase.dart';
+import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
+import 'package:kanban/features/kanban/domain/usecases/add_task_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/delete_task_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/get_tasks_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/update_status_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/update_task_usecase.dart';
 
 class KanbanNotifier extends StateNotifier<void> {
   final AddTaskUseCase addTaskUseCase;

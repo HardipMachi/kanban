@@ -1,16 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../data/task_repository_impl/task_repository_impl.dart';
-import '../../domain/entities/task_entity.dart';
-import '../../domain/repositories/task_repository.dart';
-import '../../domain/usecases/add_task_usecase.dart';
-import '../../domain/usecases/update_task_usecase.dart';
-import '../../domain/usecases/update_status_usecase.dart';
-import '../../domain/usecases/delete_task_usecase.dart';
-import '../../domain/usecases/get_tasks_usecase.dart';
-import '../notifiers/kanban_notifiers.dart';
+import 'package:kanban/core/di/data_module.dart';
+import 'package:kanban/features/kanban/data/task_repository_impl/task_repository_impl.dart';
+import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
+import 'package:kanban/features/kanban/domain/repositories/task_repository.dart';
+import 'package:kanban/features/kanban/domain/usecases/add_task_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/delete_task_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/get_tasks_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/update_status_usecase.dart';
+import 'package:kanban/features/kanban/domain/usecases/update_task_usecase.dart';
+import 'package:kanban/features/kanban/presentation/di/notifiers/kanban_notifiers.dart';
 
 // Repository
-final taskRepositoryProvider = Provider<TaskRepository>((ref) => TaskRepositoryImpl());
+final taskRepositoryProvider = Provider<TaskRepository>((ref) {
+final firestore = ref.read(firebaseFirestoreProvider);
+final auth = ref.read(firebaseAuthProvider);
+return TaskRepositoryImpl(firestore: firestore, auth: auth);
+});
 
 // Use Cases
 final addTaskUseCaseProvider = Provider<AddTaskUseCase>(
@@ -47,5 +52,5 @@ final kanbanNotifierProvider = Provider<KanbanNotifier>(
 final kanbanTasksProvider = StreamProvider<List<TaskEntity>>((ref) {
   final notifier = ref.read(kanbanNotifierProvider);
   final getTasksUseCase = ref.read(getTasksUseCaseProvider);
-  return notifier.getTasks(getTasksUseCase); // ✅ returns Stream<List<TaskEntity>>
+  return notifier.getTasks(getTasksUseCase);
 });
