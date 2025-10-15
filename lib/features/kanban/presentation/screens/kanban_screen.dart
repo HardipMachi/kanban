@@ -48,7 +48,7 @@ class KanbanScreen extends ConsumerWidget {
                     }
                   } catch (e) {
                     if (context.mounted) {
-                      showToast(context, "Logout failed: ${e.toString()}", isSuccess: false);
+                      showToast(context, "${AppStrings.logoutFailed} ${e.toString()}", isSuccess: false);
                     }
                   } finally {
                     ref.read(loadingProvider.notifier).state = false;
@@ -63,9 +63,9 @@ class KanbanScreen extends ConsumerWidget {
           ),
           body: tasksAsync.when(
             data: (tasks) {
-              final todo = tasks.where((t) => t.status == 'todo').toList();
-              final inProgress = tasks.where((t) => t.status == 'inProgress').toList();
-              final completed = tasks.where((t) => t.status == 'completed').toList();
+              final todo = tasks.where((t) => t.status == AppStrings.todo).toList();
+              final inProgress = tasks.where((t) => t.status == AppStrings.inProgress).toList();
+              final completed = tasks.where((t) => t.status == AppStrings.completed).toList();
 
               return SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -74,18 +74,18 @@ class KanbanScreen extends ConsumerWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      buildColumn(context, notifier, 'To Do', 'todo', todo, Colors.blue.shade100),
+                      buildColumn(context, notifier, AppStrings.todoColumnTitle, AppStrings.todo, todo, Colors.blue.shade100),
                       const SizedBox(width: 12),
-                      buildColumn(context, notifier, 'In Progress', 'inProgress', inProgress, Colors.orange.shade100),
+                      buildColumn(context, notifier, AppStrings.inProgressColumnTitle, AppStrings.inProgress, inProgress, Colors.orange.shade100),
                       const SizedBox(width: 12),
-                      buildColumn(context, notifier, 'Completed', 'completed', completed, Colors.green.shade100),
+                      buildColumn(context, notifier, AppStrings.completedColumnTitle, AppStrings.completed, completed, Colors.green.shade100),
                     ],
                   ),
                 ),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('Error: $e')),
+            error: (e, _) => Center(child: Text('${AppStrings.unexpectedError} $e')),
           ),
         ),
         if (isLoading)
@@ -125,7 +125,7 @@ class KanbanScreen extends ConsumerWidget {
               const SizedBox(height: 8),
               Expanded(
                 child: tasks.isEmpty
-                    ? const Center(child: Text('No tasks yet', style: TextStyle(color: Colors.grey)))
+                    ? const Center(child: Text(AppStrings.noTaskYet, style: TextStyle(color: Colors.grey)))
                     : ListView.builder(
                   padding: const EdgeInsets.symmetric(horizontal: 8),
                   itemCount: tasks.length,
@@ -152,7 +152,7 @@ class KanbanScreen extends ConsumerWidget {
                             children: [
                               Text(task.title,
                                   style: TextStyle(
-                                      decoration: task.status == 'completed' ? TextDecoration.lineThrough : null,
+                                      decoration: task.status == AppStrings.completed ? TextDecoration.lineThrough : null,
                                       fontWeight: FontWeight.w600,
                                       fontSize: 16)),
                               const SizedBox(height: 4),
@@ -165,7 +165,7 @@ class KanbanScreen extends ConsumerWidget {
                                   TextButton.icon(
                                     onPressed: () => showEditTaskDialog(context, notifier, task),
                                     icon: const Icon(Icons.edit, color: Colors.blue, size: 18),
-                                    label: const Text('Edit', style: TextStyle(color: Colors.blue)),
+                                    label: const Text(AppStrings.update, style: TextStyle(color: Colors.blue)),
                                   ),
                                   const SizedBox(width: 8),
                                   TextButton.icon(
@@ -176,7 +176,7 @@ class KanbanScreen extends ConsumerWidget {
                                       }
                                     },
                                     icon: const Icon(Icons.delete_outline, color: Colors.red, size: 18),
-                                    label: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                    label: const Text(AppStrings.delete, style: TextStyle(color: Colors.red)),
                                   ),
                                 ],
                               )

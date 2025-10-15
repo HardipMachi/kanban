@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kanban/features/kanban/domain/entities/task_entity.dart';
 import 'package:kanban/features/kanban/presentation/notifiers/kanban_notifiers.dart';
+import 'package:kanban/generated/s.dart';
 import 'toast_util.dart';
 
 Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) async {
@@ -10,16 +11,16 @@ Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) as
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Add Task'),
+      title: Text(S.of(context)!.addTask),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-          TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
+          TextField(controller: titleController, decoration: InputDecoration(labelText: S.of(context)?.textFieldTitle)),
+          TextField(controller: descController, decoration: InputDecoration(labelText: S.of(context)?.textFieldDesc)),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context)!.cancelTextButton)),
         TextButton(
           onPressed: () async {
             final title = titleController.text.trim();
@@ -30,15 +31,15 @@ Future<void> showAddTaskDialog(BuildContext context, KanbanNotifier notifier) as
               id: '',
               title: title,
               description: desc,
-              status: 'todo',
+              status: S.of(context)!.todo,
               userId: '',
             );
 
             await notifier.addTask(newTask);
-            if (context.mounted) showToast(context, "Task added successfully", isSuccess: true);
+            if (context.mounted) showToast(context, S.of(context)!.taskAddSuccess, isSuccess: true);
             if (context.mounted) Navigator.of(context).pop();
           },
-          child: const Text('Add'),
+          child: Text(S.of(context)!.add),
         ),
       ],
     ),
@@ -52,16 +53,16 @@ Future<void> showEditTaskDialog(BuildContext context, KanbanNotifier notifier, T
   await showDialog(
     context: context,
     builder: (context) => AlertDialog(
-      title: const Text('Edit Task'),
+      title: Text(S.of(context)!.editTask),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-          TextField(controller: descController, decoration: const InputDecoration(labelText: 'Description')),
+          TextField(controller: titleController, decoration: InputDecoration(labelText: S.of(context)!.textFieldTitle)),
+          TextField(controller: descController, decoration: InputDecoration(labelText: S.of(context)!.textFieldDesc)),
         ],
       ),
       actions: [
-        TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('Cancel')),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(S.of(context)!.cancelTextButton)),
         TextButton(
           onPressed: () async {
             final newTitle = titleController.text.trim();
@@ -69,10 +70,10 @@ Future<void> showEditTaskDialog(BuildContext context, KanbanNotifier notifier, T
             if (newTitle.isEmpty) return;
 
             await notifier.updateTask(task, newTitle, newDesc);
-            if (context.mounted) showToast(context, "Task edited successfully", isSuccess: true);
+            if (context.mounted) showToast(context, S.of(context)!.taskEditSuccess, isSuccess: true);
             if (context.mounted) Navigator.of(context).pop();
           },
-          child: const Text('Update'),
+          child: Text(S.of(context)!.update),
         ),
       ],
     ),

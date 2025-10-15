@@ -58,4 +58,64 @@ class SEn extends S {
 
   @override
   String get taskDelete => 'Task deleted successfully';
+
+  @override
+  String get fillDetail => 'Please fill all fields';
+
+  @override
+  String get addTask => 'Add Task';
+
+  @override
+  String get editTask => 'Edit Task';
+
+  @override
+  String get textFieldTitle => 'Title';
+
+  @override
+  String get textFieldDesc => 'Description';
+
+  @override
+  String get cancelTextButton => 'Cancel';
+
+  @override
+  String get taskAddSuccess => 'Task added successfully';
+
+  @override
+  String get taskEditSuccess => 'Task edited successfully';
+
+  @override
+  String get add => 'Add';
+
+  @override
+  String get update => 'Update';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get todo => 'todo';
+
+  @override
+  String get inProgress => 'inProgress';
+
+  @override
+  String get completed => 'completed';
+
+  @override
+  String get unexpectedError => 'Unexpected error:';
+
+  @override
+  String get logoutFailed => 'Logout failed:';
+
+  @override
+  String get noTaskYet => 'No tasks yet';
+
+  @override
+  String get todoColumnTitle => 'To Do';
+
+  @override
+  String get inProgressColumnTitle => 'In Progress';
+
+  @override
+  String get completedColumnTitle => 'Completed';
 }

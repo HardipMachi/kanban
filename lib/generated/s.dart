@@ -194,6 +194,126 @@ abstract class S {
   /// In en, this message translates to:
   /// **'Task deleted successfully'**
   String get taskDelete;
+
+  /// No description provided for @fillDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please fill all fields'**
+  String get fillDetail;
+
+  /// No description provided for @addTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Add Task'**
+  String get addTask;
+
+  /// No description provided for @editTask.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Task'**
+  String get editTask;
+
+  /// No description provided for @textFieldTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get textFieldTitle;
+
+  /// No description provided for @textFieldDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Description'**
+  String get textFieldDesc;
+
+  /// No description provided for @cancelTextButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancelTextButton;
+
+  /// No description provided for @taskAddSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Task added successfully'**
+  String get taskAddSuccess;
+
+  /// No description provided for @taskEditSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Task edited successfully'**
+  String get taskEditSuccess;
+
+  /// No description provided for @add.
+  ///
+  /// In en, this message translates to:
+  /// **'Add'**
+  String get add;
+
+  /// No description provided for @update.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get update;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @todo.
+  ///
+  /// In en, this message translates to:
+  /// **'todo'**
+  String get todo;
+
+  /// No description provided for @inProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'inProgress'**
+  String get inProgress;
+
+  /// No description provided for @completed.
+  ///
+  /// In en, this message translates to:
+  /// **'completed'**
+  String get completed;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unexpected error:'**
+  String get unexpectedError;
+
+  /// No description provided for @logoutFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Logout failed:'**
+  String get logoutFailed;
+
+  /// No description provided for @noTaskYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks yet'**
+  String get noTaskYet;
+
+  /// No description provided for @todoColumnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'To Do'**
+  String get todoColumnTitle;
+
+  /// No description provided for @inProgressColumnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get inProgressColumnTitle;
+
+  /// No description provided for @completedColumnTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get completedColumnTitle;
 }
 
 class _SDelegate extends LocalizationsDelegate<S> {

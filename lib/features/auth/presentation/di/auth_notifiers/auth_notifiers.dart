@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kanban/app/app_constants/app_Strings.dart';
 import 'package:kanban/features/auth/domain/entities/user_entity.dart';
 import 'package:kanban/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kanban/features/auth/domain/usecases/logout_usecase.dart';
@@ -49,7 +50,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
 
   // ------------------- LOGIN -------------------
   Future<void> login() async {
-    if (!validate()) throw Exception('Please fill all fields');
+    if (!validate()) throw Exception(AppStrings.fillDetail);
     try {
       state = const AsyncValue.loading();
       final user = await loginUseCase.call(
@@ -68,7 +69,7 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
 
   // ------------------- REGISTER -------------------
   Future<void> register() async {
-    if (!validate(isRegister: true)) throw Exception('Please fill all fields');
+    if (!validate(isRegister: true)) throw Exception(AppStrings.fillDetail);
     try {
       state = const AsyncValue.loading();
       final user = await registerUseCase.call(

@@ -9,6 +9,7 @@ import 'package:kanban/app/app_routes/app_router.dart';
 import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
+import 'package:kanban/features/auth/presentation/shared_widgets/custom_text_field.dart';
 import 'package:kanban/generated/s.dart';
 
 class LoginScreen extends ConsumerWidget {
@@ -37,47 +38,29 @@ class LoginScreen extends ConsumerWidget {
               const SizedBox(height: 20),
               Text(S.of(context)!.welcome, textAlign: TextAlign.center, style: AppTextStyles.heading),
               const SizedBox(height: 8),
-              const Text(
-                AppStrings.loginSubHeading,
+              Text(
+                S.of(context)!.loginSubHeading,
                 textAlign: TextAlign.center,
                 style: AppTextStyles.subHeading,
               ),
               const SizedBox(height: 30),
 
-              // Email TextField
-              TextField(
+              CustomTextField(
                 controller: authNotifier.emailController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  labelText: S.of(context)!.emailLabel,
-                  filled: true,
-                  fillColor: AppColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                label: S.of(context)!.emailLabel,
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
 
-              // Password TextField
-              TextField(
+              CustomTextField(
                 controller: authNotifier.passwordController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  labelText: S.of(context)!.passwordLabel,
-                  filled: true,
-                  fillColor: AppColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                label: S.of(context)!.passwordLabel,
+                prefixIcon: Icons.lock_outline,
                 obscureText: true,
               ),
-              const SizedBox(height: 24),
 
+              const SizedBox(height: 24),
               // Login Button
               ElevatedButton(
                 style: AppButtonStyles.primary,

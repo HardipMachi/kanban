@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:kanban/app/app_constants/app_Strings.dart';
 import 'package:kanban/features/auth/data/model/user_model.dart';
 import 'package:kanban/features/auth/domain/entities/user_entity.dart';
 import 'package:kanban/features/auth/domain/repositories/auth_repository.dart';
@@ -22,7 +23,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on FirebaseAuthException {
       rethrow;
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      throw Exception('${AppStrings.unexpectedError} $e');
     }
   }
 
@@ -42,7 +43,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on FirebaseAuthException {
       rethrow;
     } catch (e) {
-      throw Exception('Unexpected error: $e');
+      throw Exception('${AppStrings.unexpectedError} $e');
     }
   }
 

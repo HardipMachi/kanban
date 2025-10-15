@@ -8,6 +8,7 @@ import 'package:kanban/app/app_routes/app_router.dart';
 import 'package:kanban/core/utils/toast_util.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth-providers.dart';
 import 'package:kanban/features/auth/presentation/di/auth_providers/auth_form_providers.dart';
+import 'package:kanban/features/auth/presentation/shared_widgets/custom_text_field.dart';
 import 'package:kanban/generated/s.dart';
 
 class RegisterScreen extends ConsumerWidget {
@@ -43,52 +44,25 @@ class RegisterScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 30),
 
-              // Name TextField
-              TextField(
+              CustomTextField(
                 controller: authNotifier.nameController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.person_outline),
-                  labelText: S.of(context)!.registerName,
-                  filled: true,
-                  fillColor: AppColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                label: S.of(context)!.registerName,
+                prefixIcon: Icons.person_outline,
               ),
               const SizedBox(height: 16),
 
-              // Email TextField
-              TextField(
+              CustomTextField(
                 controller: authNotifier.emailController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.email_outlined),
-                  labelText: S.of(context)!.emailLabel,
-                  filled: true,
-                  fillColor: AppColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                label: S.of(context)!.emailLabel,
+                prefixIcon: Icons.email_outlined,
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16),
 
-              // Password TextField
-              TextField(
+              CustomTextField(
                 controller: authNotifier.passwordController,
-                decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.lock_outline),
-                  labelText: S.of(context)!.passwordLabel,
-                  filled: true,
-                  fillColor: AppColors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
+                label: S.of(context)!.passwordLabel,
+                prefixIcon: Icons.lock_outline,
                 obscureText: true,
               ),
               const SizedBox(height: 24),
@@ -102,7 +76,9 @@ class RegisterScreen extends ConsumerWidget {
                   try {
                     await authNotifier.register();
                     final user = ref.read(authNotifierProvider).value;
-                    if (context.mounted) showToast(context, S.of(context)!.registerSuccess, isSuccess: true);
+                    if (context.mounted) {
+                      showToast(context, S.of(context)!.registerSuccess, isSuccess: true);
+                    }
                     if (user != null) appRouter.go(AppRouteNames.login);
                   } catch (e) {
                     if (context.mounted) showToast(context, e.toString(), isSuccess: false);
